@@ -8,7 +8,6 @@ library(ggplot2)
 
 rawData <- read.csv("./train.csv", header = TRUE, na.strings = "")
 testSet <- read.csv("./test.csv", header = TRUE, na.strings = "")
-testAnswer <- read.csv("./answers.csv", header = TRUE, na.strings = "")
 
 testSet$Survived <- as.factor(testAnswer$Survived)
 
@@ -92,6 +91,7 @@ confusionMatrix(titanicBoost)
 
 ############################################################### Combined Model
 
+# Create predictions for data frame
 rfPredict <- predict(rfImputed, imputedTesting)
 boostPredict <- predict(titanicBoost, imputedTesting)
 treePredict <- predict(treeImputed, imputedTesting)
@@ -123,4 +123,14 @@ testSetBoostPred <- predict(combBoostModel, finalStackedData)
 
 ### Create prediction dataframe/CSV
 
+
 predictionDF <- data.frame(PassengerId = testSet$PassengerId, Survived = testSetBoostPred)
+
+predictionDfRf <- data.frame(PassengerId = testSet$PassengerId, Survived = testSetPred)
+
+## 77.03% accuracy
+write.csv(predictionDF, "./titanicPredictions1.csv", row.names = F)
+
+
+write.csv(predictionDfRf, "./titanicPredictions2rf.csv", row.names = F)
+
