@@ -115,15 +115,12 @@ finalRFPred <- predict(rfImputed, imputeTestSet)
 finalboostPred <- predict(titanicBoost, imputeTestSet)
 
 finalStackedData <- data.frame(rfPredict = finalRFPred, boostPredict = finalboostPred,
-                              treePredict = finalTreePred, Survived =  testAnswer$Survived)
+                              treePredict = finalTreePred)
 
 testSetPred <- predict(combRFModel, finalStackedData)
 
 testSetBoostPred <- predict(combBoostModel, finalStackedData)
 
-# 89.47% Accuracy 
-confusionMatrix(table(testAnswer$Survived, testSetPred))
+### Create prediction dataframe/CSV
 
-# 92.34% accuracy 
-confusionMatrix(table(testAnswer$Survived, testSetBoostPred))
-
+predictionDF <- data.frame(PassengerId = testSet$PassengerId, Survived = testSetBoostPred)
